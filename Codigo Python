@@ -1,0 +1,146 @@
+#menu inicial e principal
+ 
+def exibir_menu():
+ 
+    print("Bem Vindo a Life Store")
+    print("1. Ver produtos")
+    print("2. Adicione pedidos ao carrinho")
+    print("3, Remover produtos")
+    print("4. Veja seu carrinho")
+    print("5. Finalize sua compra")
+    print("6. Exit")
+    return input("Escolha uma das opções: ")
+ 
+#exibição de produtos
+ 
+def exibir_produtos(produtos):
+ 
+    print("=== Produtos Disponíveis ===")
+    for id, produto in produtos.items():
+        print(f"ID: {id}")
+        print(f"Nome: {produto['nome']}")
+        print(f"Preço: R$ {produto['preco']:.2f}")
+        print(f"Estoque: {produto['estoque']}")
+        print("-------------------------")
+ 
+#adicionar os pedidos ao carinho
+ 
+def exibir_produtos_carrinho(carrinho):
+    print("=== Produtos Disponíveis ===")
+    for id, carrinho_prod in carrinho.items():
+        print(f"ID: {id}")
+        print(f"Nome: {carrinho_prod['nome']}")
+        print(f"Preço: R$ {carrinho_prod['preco']:.2f}")
+        print("-------------------------")
+ 
+def adicionar_ao_carrinho(produtos, carrinho):
+    exibir_produtos(produtos)
+    try:
+        id_produto = int(input("\nDigite o ID do produto: "))
+        if id_produto in produtos:
+            quantidade = int(input("Digite a quantidade: "))
+            if quantidade <= produtos[id_produto]['estoque']:
+                if id_produto in carrinho:
+                    carrinho[id_produto] += quantidade
+                else:
+                    carrinho[id_produto] = quantidade
+                produtos[id_produto]['estoque'] -= quantidade
+                print("Produto adicionado ao carrinho!")
+            else:
+                print("Estoque insuficiente!")
+        else:
+            print("Produto não encontrado!")
+    except ValueError:
+        print("Por favor, digite um número válido!")
+ 
+def remover_do_carrinho(carrinho):    
+    print("qual produto deseja remover?")
+    for produto_carrinho in carrinho:
+        print(produto_carrinho)
+        resposta = int(input("Escolha uma das opções: "))
+        del produto_carrinho
+        print(f"produto com ID {resposta} foi removido")
+ 
+#ver itens do carrinho
+ 
+def ver_carrinho(produtos, carrinho):
+    if not carrinho:
+        print("Carrinho vazio!")
+        return
+    
+    print("=== Seu Carrinho ===")
+    total = 0
+    
+    for id_produto, quantidade in carrinho.items():
+        produto = produtos[id_produto]
+        subtotal = produto['preco'] * quantidade
+        total += subtotal
+        print(f"Produto: {produto['nome']}")
+        print(f"Quantidade: {quantidade}")
+        print(f"Subtotal: R$ {subtotal:.2f}")
+        print("-------------------------")
+    print(f"Total: R$ {total:.2f}")
+ 
+#finalização de compras
+ 
+def finalizar_compra(produtos, carrinho):
+    if not carrinho:
+        print("Carrinho vazio, Impossível finalizar compra.")
+        return
+    
+    ver_carrinho(produtos, carrinho)
+    confirma = input("Confirmar compra (S/N)? ").upper()
+    
+    if confirma == 'S':
+        print("Compra finalizada com sucesso")
+        carrinho.clear()
+    else:
+        print("Compra cancelada")
+ 
+def main():
+    # Catálogo de produtos disponísveis, é possível adicionar mais produtos, basta somente aumentar o número de IDS
+    produtos = {
+ 
+        1: {'nome': 'Camisa polo', 'preco': 29.90, 'estoque': 0},
+        2: {'nome': 'Calça Jeans clara', 'preco': 89.90, 'estoque': 5},
+        3: {'nome': 'Tênis Casual', 'preco': 199.90, 'estoque': 3},
+        4: {'nome': 'Moletom consguru', 'preco': 79.90, 'estoque': 7},
+        5: {'nome': 'Boné de aba reta', 'preco': 49.90, 'estoque': 8},
+        6: {'nome': 'jaqueta Jeans', 'preco': 129.90, 'estoque': 30},
+        7: {'nome': 'Calça Jeans escura', 'preco': 89.90, 'estoque': 9},
+        8: {'nome': 'Tênis para corrida', 'preco': 300.90, 'estoque': 12},
+        9: {'nome': 'chuteira', 'preco': 169.90, 'estoque': 3},
+       10: {'nome': 'luva', 'preco': 19.90, 'estoque': 0},
+    }
+    
+    # Carrinho de compras
+    carrinho = {}
+    
+    # Loop principal para retorno de IDS/add
+    while True:
+        opcao = exibir_menu()
+        
+        if opcao == '1':
+            exibir_produtos(produtos)
+        
+        elif opcao == '2':
+            adicionar_ao_carrinho(produtos, carrinho)
+ 
+        elif opcao == '3':
+            remover_do_carrinho(carrinho)
+        
+        elif opcao == '4':
+            ver_carrinho(produtos, carrinho)
+        
+        elif opcao == '5':
+            finalizar_compra(produtos, carrinho)
+        
+        elif opcao == '6':
+            print("Volte sempre!")
+            break
+        
+        else:
+            print("Opção inválida! Tente novamente.")
+ 
+if __name__ == "__main__":
+    main()
